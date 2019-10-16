@@ -118,6 +118,8 @@ class BST:
 				return count
 			else:
 				node = self.Root
+				if node.RightChild is None and node.LeftChild is None:
+					return 1
 		if node.LeftChild is not None and node.RightChild is not None:
 			count = 2
 			if node is self.Root:

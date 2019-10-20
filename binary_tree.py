@@ -7,7 +7,6 @@ class BSTNode:
 		self.LeftChild = None # левый потомок
 		self.RightChild = None # правый потомок
 
-
 class BSTFind: # промежуточный результат поиска
 
 	def __init__(self):
@@ -18,10 +17,16 @@ class BSTFind: # промежуточный результат поиска
 		self.ToLeft = False # True, если родительскому узлу надо 
 		# добавить новый узел левым потомком
 
+	def test(self):
+		if self.NodeHasKey == True:
+			return True
+		else:
+			return False
+
 class BST:
 
 	def __init__(self, node):
-		self.Root = node # корень дерева, или None
+		self.Root = node
 
 	def FindNodeByKey(self, key):
 		result = BSTFind()
@@ -58,6 +63,7 @@ class BST:
 				node.Node.LeftChild = BSTNode(key, val, node.Node)
 			else:
 				node.Node.RightChild = BSTNode(key, val, node.Node)
+			return True
   
 	def FinMinMax(self, FromNode, FindMax):
 		if self.Root is not None:
@@ -76,40 +82,43 @@ class BST:
 		return None
 	
 	def DeleteNodeByKey(self, key):
-		del_node = self.FindNodeByKey(key)
-		if del_node.NodeHasKey is False:
+		d_node = self.FindNodeByKey(key).Node
+		if self.FindNodeByKey(key).NodeHasKey is False:
 			return False
-		if del_node.Node.RightChild is None:
-			if del_node.Node.LeftChild is None:
-				if del_node.Node.Parent.LeftChild is del_node:
-					del_node.Node.Parent.LeftChild = None
+		if d_node.RightChild is None:
+			if d_node.LeftChild is None: 
+				if d_node is self.Root:
+					self.Root = None
+				elif d_node is d_node.Parent.LeftChild:
+					d_node.Parent.LeftChild = None
 				else:
-					del_node.Node.Parent.RightChild = None
+					d_node.Parent.RightChild = None
 			else:
-				if del_node.Node.Parent.LeftChild is del_node.Node:
-					del_node.Node.Parent.LeftChild = del_node.Node.LeftChild
-				else:
-					del_node.Node.Parent.RightChild = del_node.Node.LeftChild
+				if d_node is d_node.Parent.LeftChild: 
+					d_node.Parent.LeftChild = d_node.LeftChild 
+				else:											
+					d_node.Parent.RightChild = d_node.LeftChild 	
 		else:
-			rep_node = self.FinMinMax(del_node.Node.RightChild, False)
-			rep_node.LeftChild = None
-			if del_node.Node.LeftChild is not None:
-				del_node.Node.LeftChild.Parent = rep_node
-			if del_node.Node.RightChild is not None:
-				del_node.Node.RightChild.Parent = rep_node
-			if rep_node is not del_node.Node.LeftChild:
-				rep_node.LeftChild = del_node.Node.LeftChild
-			if rep_node is not del_node.Node.RightChild:
-				rep_node.RightChild = del_node.Node.RightChild
-			rep_node.Parent = del_node.Node.Parent
-			if rep_node.Parent is not None:
-				if del_node.Node.Parent.LeftChild is del_node.Node:
-					del_node.Node.Parent.LeftChild = rep_node
-				elif del_node.Node.Parent.RightChild is del_node.Node:
-					del_node.Node.Parent.RightChild = rep_node
+			r_node = self.FinMinMax(d_node.RightChild, False)
+			
+			r_node.Parent = d_node.Parent
+			if r_node.Parent is not None:
+				if d_node.Parent.LeftChild is d_node:
+					d_node.Parent.LeftChild = r_node
+				elif d_node.Parent.RightChild is d_node:
+					d_node.Parent.RightChild = r_node
 			else:
-				self.Root = rep_node
-
+				self.Root = r_node
+			if d_node.LeftChild is not None:
+				r_node.LeftChild = d_node.LeftChild
+				r_node.LeftChild.Parent = r_node
+			if d_node.RightChild is not r_node:
+				if r_node.RightChild is not None:
+					d_node.RightChild.Parent = self.FinMinMax(r_node.RightChild, True)
+					self.FinMinMax(r_node.RightChild, True).RightChild = d_node.RightChild
+				else: 
+					r_node.RightChild = d_node.RightChild
+		return True
 
 	def Count(self, node = None):
 		count = 0

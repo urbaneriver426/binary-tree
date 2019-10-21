@@ -7,7 +7,6 @@ class BSTNode:
 		self.LeftChild = None 
 		self.RightChild = None 
 
-
 class BSTFind:
 
 	def __init__(self):
@@ -96,10 +95,16 @@ class BST:
 			else:
 				if d_node is d_node.Parent.LeftChild: 
 					d_node.Parent.LeftChild = d_node.LeftChild 
+					d_node.LeftChild.Parent = d_node.Parent
 				else:											
-					d_node.Parent.RightChild = d_node.LeftChild 	
+					d_node.Parent.RightChild = d_node.LeftChild
+					d_node.LeftChild.Parent = d_node.Parent 	
 		else:
 			r_node = self.FinMinMax(d_node.RightChild, False)
+			if r_node is r_node.Parent.LeftChild:
+				r_node.Parent.LeftChild = None
+			else:
+				r_node.Parent.RightChild = None
 			r_node.Parent = d_node.Parent
 			if r_node.Parent is not None:
 				if d_node.Parent.LeftChild is d_node:

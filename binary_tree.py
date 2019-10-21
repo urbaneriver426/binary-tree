@@ -1,21 +1,21 @@
 class BSTNode:
 	
 	def __init__(self, key, val, parent):
-		self.NodeKey = key # ключ узла
-		self.NodeValue = val # значение в узле
-		self.Parent = parent # родитель или None для корня
-		self.LeftChild = None # левый потомок
-		self.RightChild = None # правый потомок
+		self.NodeKey = key 
+		self.NodeValue = val 
+		self.Parent = parent 
+		self.LeftChild = None 
+		self.RightChild = None 
 
-class BSTFind: # промежуточный результат поиска
+
+class BSTFind:
 
 	def __init__(self):
-		self.Node = None # None если 
-		# в дереве вообще нету узлов
+		self.Node = None
+		
 
-		self.NodeHasKey = False # True если узел найден
-		self.ToLeft = False # True, если родительскому узлу надо 
-		# добавить новый узел левым потомком
+		self.NodeHasKey = False 
+		self.ToLeft = False
 
 	def test(self):
 		if self.NodeHasKey == True:
@@ -100,7 +100,6 @@ class BST:
 					d_node.Parent.RightChild = d_node.LeftChild 	
 		else:
 			r_node = self.FinMinMax(d_node.RightChild, False)
-			
 			r_node.Parent = d_node.Parent
 			if r_node.Parent is not None:
 				if d_node.Parent.LeftChild is d_node:
@@ -121,28 +120,24 @@ class BST:
 		return True
 
 	def Count(self, node = None):
-		count = 0
-		if node is None:
-			if self.Root is None:
-				return count
-			else:
-				node = self.Root
-				if node.RightChild is None and node.LeftChild is None:
-					return 1
-		if node.LeftChild is not None and node.RightChild is not None:
-			count = 2
-			if node is self.Root:
-				count += 1
-			return count +self.Count(node.LeftChild)+self.Count(node.RightChild)
-		elif node.LeftChild is not None:
-			count = 1
-			if node is self.Root:
-				count += 1
-			return count + self.Count(node.LeftChild)
-		elif node.RightChild is not None:
-			count = 1
-			if node is self.Root:
-				count += 1
-			return count + self.Count(node.RightChild)
-		else:
+		if self.Root is None:
 			return 0
+		if node is None:
+			node = self.Root
+			if node.RightChild is not None and node.LeftChild is not None:
+				return 3 + self.Count(node.LeftChild) + self.Count(node.RightChild)
+			elif node.LeftChild is not None:
+				return 2 + self.Count(node.LeftChild)
+			elif node.RightChild is not None:
+				return 2 + self.Count(node.RightChild)
+			else:
+				return 1
+		else:
+			if node.RightChild is not None and node.LeftChild is not None:
+				return 2 + self.Count(node.LeftChild) + self.Count(node.RightChild)
+			elif node.LeftChild is not None:
+				return 1 + self.Count(node.LeftChild)
+			elif node.RightChild is not None:
+				return 1 + self.Count(node.RightChild)
+			else:
+				return 0

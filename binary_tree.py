@@ -7,6 +7,18 @@ class BSTNode:
 		self.LeftChild = None 
 		self.RightChild = None 
 
+	def GetLeftChild(self):
+		return node.LeftChild
+
+	def GetRightChild(self):
+		return self.RightChild
+
+	def GetValue(self):
+		return self.NodeValue
+
+	def GetKey(self):
+		return self.NodeKey
+
 class BSTFind:
 
 	def __init__(self):
@@ -124,25 +136,41 @@ class BST:
 					r_node.RightChild = d_node.RightChild
 		return True
 
-	def Count(self, node = None):
-		if self.Root is None:
-			return 0
+	def Count(self):
+		return len(self.WideAllNodes())
+
+	def WideAllNodes(self):
+		queue = []
+		result = tuple()
+		if self.Root is not None:
+			queue.append(self.Root)
+		while len(queue) > 0:
+			if queue[0].LeftChild:
+				queue.append(queue[0].LeftChild)
+			if queue[0].RightChild:
+				queue.append(queue[0].RightChild)
+			result += (queue.pop(0), )			
+		return result
+
+	def InOrder(self, node):
 		if node is None:
-			node = self.Root
-			if node.RightChild is not None and node.LeftChild is not None:
-				return 3 + self.Count(node.LeftChild) + self.Count(node.RightChild)
-			elif node.LeftChild is not None:
-				return 2 + self.Count(node.LeftChild)
-			elif node.RightChild is not None:
-				return 2 + self.Count(node.RightChild)
-			else:
-				return 1
-		else:
-			if node.RightChild is not None and node.LeftChild is not None:
-				return 2 + self.Count(node.LeftChild) + self.Count(node.RightChild)
-			elif node.LeftChild is not None:
-				return 1 + self.Count(node.LeftChild)
-			elif node.RightChild is not None:
-				return 1 + self.Count(node.RightChild)
-			else:
-				return 0
+			return tuple()
+		return self.InOrder(node.LeftChild) + (node,) + self.InOrder(node.RightChild)
+
+	def PreOrder(self, node):
+		if node is None:
+			return tuple()
+		return (node,) + self.PreOrder(node.LeftChild) +  self.PreOrder(node.RightChild)
+
+	def PostOrder(self, node):
+		if node is None:
+			return tuple()
+		return self.PostOrder(node.LeftChild) +  self.PostOrder(node.RightChild) + (node,)
+
+	def DeepAllNodes(self, order):
+		if order == 0:
+			return self.InOrder(self.Root)
+		if order == 1:
+			return self.PostOrder(self.Root)
+		if order == 2:
+			return self.PreOrder(self.Root)
